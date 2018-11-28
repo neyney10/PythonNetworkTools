@@ -1,0 +1,4 @@
+[Closed] Port: 443
+[Closed] Port: 80
+[Closed] Port: 23
+[Open] Port: 22
