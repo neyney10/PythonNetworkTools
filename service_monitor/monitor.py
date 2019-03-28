@@ -4,7 +4,7 @@ from logger import *
 import time # for sleep
 from event import Event
 import diff
-import os
+
 
 ####################### Class Description: ####################### 
 # process monitor class ia a class which monitors the processes on 
@@ -18,28 +18,30 @@ class ProcessMonitor(Thread):
         self.converter = Converter()
         self.loggerServices = Logger('./serv')
         self.loggerStatus = Logger('./log')
-        self.processes = []
+        self.processes = set()
         
 
     def run(self):
         print 'ProcessMonitor thread is started...'
         while 1:
-            processesTemp = processmanager.getAllRunningProccessNames()
-            ev = self.converter.encode(processesTemp)
+            processesTemp = processmanager.getAllRunningServices()
+            ev = Event('','',processesTemp)
             self.loggerServices.output2file(ev)
 
             if len(self.processes)>0:
-                d = diff.difflist(self.processes,processesTemp)
-                if len(d)>0:
-                    ev = self.converter.encode(d)
+                d = diff.diffset(self.processes,processesTemp)
+                if len(d[0])>0:
+                    ev = Event('<<--New Services:-->> [',']',d[0])
                     self.loggerStatus.output2file(ev)
-                    print d
+                    print ev
+                if len(d[1])>0:
+                    ev = Event('<<--Stopped Services:-->> [',']',d[1])
+                    self.loggerStatus.output2file(ev)
+                    print ev
 
             self.processes = processesTemp
             time.sleep(self.interval)
 
 
 
-    def add(self,proc):
-        self.processes.append(proc)
-        print 'added a new process to monitoring list' #temp
+

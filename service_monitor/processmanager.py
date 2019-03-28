@@ -1,58 +1,32 @@
 import psutil # dependency - process management
 # Documentation of psutil: https://psutil.readthedocs.io/en/latest/#processes
-from pprint import pprint as pp
+from subprocess import Popen, PIPE
+import re
 
-# source:
-# https://thispointer.com/python-check-if-a-process-is-running-by-name-and-find-its-process-id-pid/
-def findProcessIdByName(processName):
-    '''
-    Get a list of all the PIDs of a all the running process whose name contains
-    the given string processName
-    '''
- 
-    listOfProcessObjects = []
- 
-    #Iterate over the all the running process
-    for proc in psutil.process_iter():
-       try:
-           pinfo = proc.as_dict(attrs=['pid', 'name', 'create_time'])
-           # Check if process name contains the given name string.
-           if processName.lower() in pinfo['name'].lower() :
-               listOfProcessObjects.append(pinfo)
-       except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
-           pass
- 
-    return listOfProcessObjects
+def getAllRunningServices():
+    if psutil.WINDOWS:
+        return getServicesWindows()
+    
+    if psutil.LINUX:
+        return getServicesLinux()
 
-def getProcessByID(proc_id):
-    try:
-        proc = psutil.Process(proc_id)
-        return proc
-    except (psutil.NoSuchProcess):
-        print 'error: no such process exists'
+def getServicesWindows(): # windows
+    services = set()
+    for p in psutil.win_service_iter():
+        if p.status() == psutil.STATUS_RUNNING:
+            services.add(p.name())
 
-def printAllRunningProcesses():
-    names = getAllRunningProccessNames()
-    for n in names:
-        print n
+    return services
 
-def getAllRunningPID():
-    return psutil.pids()
+def getServicesLinux(): # linux, see:https://stackoverflow.com/questions/10405515/piping-in-shell-via-python-subprocess-module
+    
+    cmd1 = Popen(["service","--status-all"],stdout=PIPE,stderr=PIPE)
+    cmd2 = Popen(["grep","+"],stdin=cmd1.stdout,stdout=PIPE,stderr=PIPE)
 
-def getAllRunningProccessNames():
-    process_ids = getAllRunningPID()
-    names = []
-
-    for proc_id in process_ids:
-        try:
-            proc = psutil.Process(proc_id)
-            names.append(proc.name())
-        except (psutil.NoSuchProcess):
-           pass
-    return names
-
-def test():
-    print pp([(p.pid, p.info) for p in psutil.process_iter(attrs=['name','status']) if p.info['status'] == psutil.STATUS_RUNNING])
-
-
+    cmd1.stdout.close()
+    stdout = cmd2.communicate()[0]
+    stdout = re.sub(' *','',stdout)
+    stdout = re.sub('\[\+\]','',stdout)
         
+    services = stdout.split('\n')
+    return set(services[:-1])

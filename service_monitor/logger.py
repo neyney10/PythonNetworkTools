@@ -7,7 +7,6 @@ class Logger:
         self.filepath = filepath
         self.last_time = 0
         self.updateLastTime()
-        print self.last_time
 
 
 
@@ -33,7 +32,6 @@ class Logger:
             lines = []
             for l in f:
                 lines.append(l)
-
 
             return lines
         except:
@@ -67,20 +65,19 @@ class Converter:
     def decode(self, string):
         try:
             timeindex = string.index(' - ')
-            timevalue = string[0:timeindex]
-            processNamesString = string[timeindex+3:len(string)]
-            processNamesList = processNamesString.split(', ')
-            processNamesList = processNamesList[0:len(processNamesList)-1] 
+            timevalue = string[1:timeindex-1]
+            timeobj   = datetime.strptime(timevalue, '%Y-%m-%d %H:%M:%S.%f')
 
-            return processNamesList
+            processNamesString  = string[timeindex+3:len(string)]
+            processNamesList    = processNamesString.split(', ')
+            processNamesList    = processNamesList[0:len(processNamesList)-1] 
+
+            ev = Event('','',processNamesList)
+            ev.setTime(timeobj)
+            return ev
         except:
             pass
 
-    def encode(self, lst):
-        string = ''
-        for p in lst:
-            if p:
-                string+=p+", "
-
-        return Event(string)
+    def encode(self, event):
+        return str(event)
                 
