@@ -8,6 +8,7 @@ The documentation and syntax can be found on the file script itself along with i
 The documentation and syntax can be found on the file script itself along with its dependencies.
 
 ## Service Monitor
+![](service_monitor_diff_command.gif)
 ### What is it?
 Service monitor is a python program which monitors the services on the host computer, it  scans the services every now and then and the time interval between scans can be configured.
 
@@ -19,7 +20,7 @@ Service monitor is a python program which monitors the services on the host comp
 - Tool Protection: alert on an outside modification of log files.
 - Command Line Interface (CLI)
     - auto-complete commands using TAB key (Linux only)
-    - show available commands using TAB-TAB comnination (Linux only)
+    - show available commands using TAB-TAB combination (Linux only)
     - "help" command and command description, synta and examples info.
 
 ### How to run

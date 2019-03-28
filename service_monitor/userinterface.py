@@ -1,7 +1,7 @@
 
 import sys # for exit
-import re
-from cmd import Cmd
+import re # Regular expressions
+from cmd import Cmd # Guide: https://wiki.python.org/moin/CmdModule
 from monitor import ProcessMonitor
 from logger import Converter
 import diff
