@@ -21,7 +21,7 @@ Service monitor is a python program which monitors the services on the host comp
 - Command Line Interface (CLI)
     - auto-complete commands using TAB key (Linux only)
     - show available commands using TAB-TAB combination (Linux only)
-    - "help" command and command description, synta and examples info.
+    - "help" command and command description, syntax and examples info.
 
 ### How to run
 Download the required files for the program found in the service_monitor directory and run the file "main.py", The monitor scans by default every 7 seconds and can be changed with the "interval" command in the CLI, The scan auto-start on program execution.

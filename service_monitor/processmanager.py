@@ -1,7 +1,7 @@
 import psutil # dependency - process management
 # Documentation of psutil: https://psutil.readthedocs.io/en/latest/#processes
 from subprocess import Popen, PIPE
-import re
+import re # regular expression
 
 def getAllRunningServices():
     if psutil.WINDOWS:

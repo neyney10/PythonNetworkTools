@@ -1,8 +1,16 @@
 from datetime import datetime # for getting current time
 import processmanager
 
+##### Event class ######
+# An event is an object which stores all the event info about a service scan,
+# can be added with additional text such as text head, text foot and time of date in order to
+# make the event ready to be converted into string for it to be stored
+# on a file.
 class Event: 
-    # constructor
+    ## Constructor
+    # Input: head - as a string, the text which preceeds the service set in the string.
+    #        foot - as a string, the text which follows the service set in the string.
+    #        serv_set - python Set, which contains all services on current scan event.
     def __init__(self,head,foot,serv_set):
         self.message = ''
         if head:

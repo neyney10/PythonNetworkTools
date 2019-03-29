@@ -1,6 +1,6 @@
 from threading import Thread # for threading.
 import processmanager
-from logger import *
+from logger import Converter, Logger
 import time # for sleep
 from event import Event
 import diff
@@ -11,16 +11,18 @@ import diff
 # the host computer and logs them to a file using the "Logger" class from logger.py.
 # The class extends 'Thread' and by is sampleling the processes on the computer every
 # time interval which supplied at the constructor (in seconds).
-class ProcessMonitor(Thread):
+class ServiceMonitor(Thread):
     def __init__(self, interval):
-        super(ProcessMonitor, self).__init__()
+        super(ServiceMonitor, self).__init__()
         self.interval = interval # time interval between scans, by seconds for now
         self.converter = Converter()
         self.loggerServices = Logger('./serv')
         self.loggerStatus = Logger('./log')
         self.processes = set()
         
-
+    ## overriding Run method of Thread.
+    ## the function runs an infinite loop and sampling the systen services,
+    ## logging them into files, and notify the user on console on any changes.
     def run(self):
         print 'ProcessMonitor thread is started...'
         while 1:

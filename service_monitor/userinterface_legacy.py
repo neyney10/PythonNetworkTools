@@ -1,7 +1,7 @@
 import sys # for exit
 import re
 from cmd import Cmd
-from monitor import ProcessMonitor
+from monitor import ServiceMonitor
 from logger import Converter
 import diff
 
