@@ -13,7 +13,7 @@ from datetime import datetime,timedelta
 class CLI2(Cmd,object):
     
     # cmd fields
-    prompt = '[Monitor]> '
+    prompt = '[manual]> '
     intro = 'Using CLI Version-1.0, enter "help" for commands, supports auto-complete on linux with tab.'
 
 

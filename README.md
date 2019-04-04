@@ -41,3 +41,9 @@ The program requires Python 2.7.
 - Threading (standard library of python 2.7)
 - datetime (standard library of python 2.7)
 
+### Screenshots
+Service List text log file.
+![](service_monitor_servicelist_text.jpg)
+Status (changes) text log file.
+![](service_monitor_statuslog_text.jpg)
+

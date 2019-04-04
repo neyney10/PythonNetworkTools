@@ -25,7 +25,7 @@ class ServiceMonitor(Thread):
     ## the function runs an infinite loop and sampling the systen services,
     ## logging them into files, and notify the user on console on any changes.
     def run(self):
-        print 'ProcessMonitor thread is started...'
+        # print 'ProcessMonitor thread is started...'
         while 1:
             processesTemp = processmanager.getAllRunningServices()
             ev = Event('','',processesTemp)
