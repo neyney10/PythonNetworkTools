@@ -13,6 +13,7 @@ class Event:
     #        serv_set - python Set, which contains all services on current scan event.
     def __init__(self,head,foot,serv_set):
         self.message = ''
+    
         if head:
             self.header = head
         else:
