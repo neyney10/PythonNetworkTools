@@ -19,6 +19,7 @@ class ServiceMonitor(Thread):
         self.loggerServices = Logger('./serv')
         self.loggerStatus = Logger('./log')
         self.processes = set()
+        self.print_mode = False
         
     ## overriding Run method of Thread.
     ## the function runs an infinite loop and sampling the systen services,
@@ -35,11 +36,13 @@ class ServiceMonitor(Thread):
                 if len(d[0])>0:
                     ev = Event('<<--New Services:-->> [',']',d[0])
                     self.loggerStatus.output2file(ev)
-                    print ev
+                    if self.print_mode:
+                        print ev
                 if len(d[1])>0:
                     ev = Event('<<--Stopped Services:-->> [',']',d[1])
                     self.loggerStatus.output2file(ev)
-                    print ev
+                    if self.print_mode:
+                        print ev
 
             self.processes = processesTemp
             time.sleep(self.interval)

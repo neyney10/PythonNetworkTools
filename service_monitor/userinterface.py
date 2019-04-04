@@ -16,6 +16,7 @@ class CLI2(Cmd,object):
     prompt = '[Monitor]> '
     intro = 'Using CLI Version-1.0, enter "help" for commands, supports auto-complete on linux with tab.'
 
+
     ## Constructor
     # Starting a new thread of ServiceMonitor
     # and entering a CLI input loop.
@@ -25,14 +26,53 @@ class CLI2(Cmd,object):
         self.time = 7
         self.monitor = ServiceMonitor(self.time)
         self.monitor.start()
-
+        self.modes = {"manual": [self.mode_enter_manual,self.mode_exit_manual],
+                    "monitor": [self.mode_enter_monitor,self.mode_exit_monitor]} # add here for more modes
+        
+        self.current_mode = self.modes.keys()[0]
         self.cmdloop()
 
+
+    ## [CLI-Command] switch
+    ## by getting a mode as a string the function switches
+    ## to that mode.
+    def do_switch(self, args):
+        mode_req = self.parse(args)
+        if len(mode_req) != 1: # if there arent 4 arguments, do not continue.
+            print '-> Invalid arguments [Err:1]: Please enter a mode such as "manual" or "monitor".'
+            return
+        for mode in self.modes:
+            if mode == mode_req[0]:
+                mode_req_info = self.modes.get(mode)
+                current_mode_info = self.modes.get(self.current_mode)
+                current_mode_info[1]() # activate exiting function
+                mode_req_info[0]() # activate entering function
+                self.current_mode = mode
+                self.change_prompt(self.current_mode)
+                print 'Entered into '+self.current_mode+' mode.'
+                return
+
+        print '-> Invalid arguments [Err:2]: unknown mode.'
+
+     ## CLI-Help command to print command description
+    def help_switch(self):
+        print 'Switch to a different mode.'
+        print '<------> Syntax: switch <mode>'
+        print '<-> Avilable modes: ',
+        for mode in self.modes:
+            print mode,
+        print ''
+        print '<-> Example:'
+        print '<------> switch '+self.modes.keys()[0]
 
     ## [CLI-Command] diff
     ## by getting 4 arguments of date and times, the function
     ## prints the difference between those two events.
     def do_diff(self, args):
+        if self.current_mode != "manual":
+            print '-> must be in manual mode to use the "diff" function.'
+            return
+
         # should get 4 args, arg0=date1, arg1=time1, arg2=date2, arg3=time2
         dates = self.parse(args)
         if len(dates) != 4: # if there arent 4 arguments, do not continue.
@@ -94,6 +134,10 @@ class CLI2(Cmd,object):
     ## CLI-Command function 'interval', used to show current interval configuration and 
     ## modify it.
     def do_interval(self, arg):
+        if self.current_mode != "manual":
+            print '-> must be in manual mode to use the "interval" function.'
+            return
+
         if arg:
             try:
                 time = int(arg)
@@ -119,8 +163,26 @@ class CLI2(Cmd,object):
         print '<-> Example:'
         print '<------> interval 60'
 
+    ## CMD's built-in function.
     def do_EOF(self, line):
         return True
+
+    ## function that get executed when entering manual mode
+    def mode_enter_manual(self):
+        pass
+
+    ## function that get executed when exiting manual mode
+    def mode_exit_manual(self):
+        pass
+
+    ## function that get executed when entering monitor mode
+    def mode_enter_monitor(self):
+        self.monitor.print_mode = True       
+
+    ## function that get executed when exiting monitor mode
+    def mode_exit_monitor(self):
+        self.monitor.print_mode = False     
+
 
     ## parser - parse a string line into a list of arguments
     # Input: cmdString - as text string.
@@ -130,6 +192,12 @@ class CLI2(Cmd,object):
         inputs = cmdString.split(' ')
 
         return inputs
+
+    ## changes prompt test
+    # Input: text as a string.
+    # Output: none.
+    def change_prompt(self,text):
+        self.prompt = '['+text+']> '
     
 
 # source: 
