@@ -1,4 +1,5 @@
 from event import *
+from datetime import datetime # for getting current time
 import os
 ####################### Class Description: ####################### 
 # The Logger class is a class which handles all the output to files
@@ -61,7 +62,10 @@ class Logger:
         try:
             last_modified = os.path.getmtime(self.filepath)
             if self.last_time < last_modified:
-                print "\nCHANGED !!!!!!!!!! OMFG\n"#temp
+                print "\n----------------------------------------------------------------------------"
+                print str(datetime.now())+" - DECTECTED AN UNAUTHURIZED MODIFICATION OF LOG FILES!"
+                print "file: "+self.filepath
+                print "----------------------------------------------------------------------------"
                 return True
             return False
         except:

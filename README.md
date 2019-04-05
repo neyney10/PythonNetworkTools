@@ -42,8 +42,12 @@ The program requires Python 2.7.
 - datetime (standard library of python 2.7)
 
 ### Screenshots
-Service List text log file.
+#### Monitor mode demonstration
+![](service_monitor_mode_demo.gif)
+#### Unauthurizedm modification detection
+![](service_monitor_modify_detection_demo.gif)
+#### Service List text log file.
 ![](service_monitor_servicelist_text.jpg)
-Status (changes) text log file.
+#### Status (changes) text log file.
 ![](service_monitor_statuslog_text.jpg)
 

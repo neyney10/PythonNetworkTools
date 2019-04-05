@@ -16,8 +16,8 @@ class ServiceMonitor(Thread):
         super(ServiceMonitor, self).__init__()
         self.interval = interval # time interval between scans, by seconds for now
         self.converter = Converter()
-        self.loggerServices = Logger('./serv')
-        self.loggerStatus = Logger('./log')
+        self.loggerServices = Logger('./serviceList.txt')
+        self.loggerStatus = Logger('./Status_Log.txt')
         self.processes = set()
         self.print_mode = False
         
