@@ -3,8 +3,8 @@ import sys # for exit
 import re # Regular expressions
 from cmd import Cmd # Guide: https://wiki.python.org/moin/CmdModule
 from monitor import ServiceMonitor
-from logger import Converter
 import diff
+from event import Event
 from datetime import datetime,timedelta
 
 ## CLI2 Class is an improvement of the lagacy CLI class.
@@ -25,7 +25,7 @@ class CLI2(Cmd,object):
         super(CLI2,self).__init__()
         self.time = 7
         self.monitor = ServiceMonitor(self.time)
-        self.monitor.start()
+        #self.monitor.start()
         self.modes = {"manual": [self.mode_enter_manual,self.mode_exit_manual],
                     "monitor": [self.mode_enter_monitor,self.mode_exit_monitor]} # add here for more modes
         
@@ -88,7 +88,7 @@ class CLI2(Cmd,object):
             print '-> Invalid arguments [Err:2]: Please enter 2 date and times for two seperate events!'
             return
 
-        conv = Converter() # used to parse each line of the file into an event
+        #conv = Converter() # used to parse each line of the file into an event - legacy
 
         mdelta = timedelta(seconds=3) # max delta to compare with
 
@@ -100,10 +100,10 @@ class CLI2(Cmd,object):
             dd = try_parsing_date(ev_date) # parse it and store is a 'dd' variable.
 
             if ev_date == (date1) or abs(dd-d1)<mdelta:
-                ev1 = conv.decode(ev_str)
+                ev1 = Event.fromString(ev_str) #conv.decode(ev_str) - legacy
             
             if ev_date == (date2) or abs(dd-d2)<mdelta:
-                ev2 = conv.decode(ev_str)
+                ev2 = Event.fromString(ev_str) #conv.decode(ev_str) -legacy
         
         if ev1 == None or ev2 == None:
             print '-> Events not found for given two dates and times, try to be more precise.'
@@ -145,6 +145,7 @@ class CLI2(Cmd,object):
                     print '-> Invalid argument [Err:1]: Time interval between scans cannot be negative or zero, must be positive greater than 4 (in seconds)  '
                     return
 
+                self.time = time
                 self.monitor.interval = time
                 print 'Interval between scans has changed to '+str(time)+' seconds.'
             except:
@@ -177,11 +178,14 @@ class CLI2(Cmd,object):
 
     ## function that get executed when entering monitor mode
     def mode_enter_monitor(self):
-        self.monitor.print_mode = True       
+        self.monitor = ServiceMonitor(self.time)
+        self.monitor.print_mode = True    
+        self.monitor.start()   
 
     ## function that get executed when exiting monitor mode
     def mode_exit_monitor(self):
         self.monitor.print_mode = False     
+        self.monitor.stop()
 
 
     ## parser - parse a string line into a list of arguments

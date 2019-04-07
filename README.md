@@ -33,6 +33,15 @@ Download the required files for the program found in the service_monitor directo
 ### Python Version
 The program requires Python 2.7.
 
+### Changelog
+- Date: 07/04/2019 - Version 1.1.
+    - Separated defensive system from the logger, improving integrating its defences in other parts of the program.
+    - added a flag '-log' to diff function to search inside the status log file instead of the servicelist.
+    - bug fixes
+- Date: 28/03/2019 - Version 1.0.
+    - Initial release
+
+
 ### Dependencies and modules
 - psutil v5.6.1 (for windows only, needed for service list scanning)
 - cmd (standard library of python 2.7, the CLI)
