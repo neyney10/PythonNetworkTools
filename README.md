@@ -53,10 +53,13 @@ The program requires Python 2.7.
 ### Screenshots
 #### Monitor mode demonstration
 ![](service_monitor_mode_demo.gif)
-#### Unauthurizedm modification detection
+#### Unauthurized modification detection
 ![](service_monitor_modify_detection_demo.gif)
 #### Service List text log file.
 ![](service_monitor_servicelist_text.jpg)
 #### Status (changes) text log file.
 ![](service_monitor_statuslog_text.jpg)
-
+#### 'diff' function
+![](service_monitor_diff_command.gif)
+#### 'diff' function with log - review events between two dates from status log file.
+![](service_monitor_diff_log.gif)

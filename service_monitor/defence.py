@@ -75,3 +75,22 @@ class File_Monitor():
             File_Monitor.filepaths[filepath] = os.path.getmtime(filepath)
         except:
             pass
+
+
+## Ceasar cipher offset 5
+def encrypt(w):
+    s = ''
+    for u in w:
+        uval = ord(u)
+        uval += 5
+        s    += chr(uval)
+    return s
+
+## Ceasar cipher offset 5
+def decrypt(w):
+        s = ''
+        for u in w:
+                uval = ord(u)
+                uval -= 5
+                s  += chr(uval)
+        return s

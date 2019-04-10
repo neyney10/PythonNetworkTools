@@ -4,7 +4,7 @@ import re # Regular expressions
 from cmd import Cmd # Guide: https://wiki.python.org/moin/CmdModule
 from monitor import ServiceMonitor
 import diff
-from event import Event
+from event import Event, Event_Log
 from datetime import datetime,timedelta
 
 ## CLI2 Class is an improvement of the lagacy CLI class.
@@ -75,6 +75,12 @@ class CLI2(Cmd,object):
 
         # should get 4 args, arg0=date1, arg1=time1, arg2=date2, arg3=time2
         dates = self.parse(args)
+
+        if '-log' in dates:
+            dates.remove('-log')
+            self.diffg(dates)
+            return
+
         if len(dates) != 4: # if there arent 4 arguments, do not continue.
             print '-> Invalid arguments [Err:1]: Please enter 2 date and times for two seperate events! '
             return
@@ -125,12 +131,58 @@ class CLI2(Cmd,object):
     ## CLI-Help command to print command description
     def help_diff(self):
         print 'Show difference between two events with given dates and times.'
+        print 'Additional options flags: -log (shows all events between two dates and times from status log file)'
         print '<------> Syntax: diff <date1> <time1> <date2> <time2>'
         print '<-> Where \'date\' is of the syntax: YYYY-MM-DD, e.g 2019-03-27'
         print '<-> \'time\' is of the syntax: HH:mm:ss.nnnnnn, e.g 21:43:45.707000'
         print '<-> Example:'
         print '<------> diff 2019-03-27 21:43:45.707000 2019-03-27 15:43:33.207000'
 
+
+    ## temp
+    def diffg(self,dates):
+        date1 = (dates[0] +' '+ dates[1]) # construct a string from Time argument and Date argument
+        date2 = (dates[2] +' '+ dates[3]) # construct a string from Time argument and Date argument
+        try: # try to convert those strings into a 'datetime' objects.
+            d1 = try_parsing_date(date1)
+            d2 = try_parsing_date(date2)
+        except: # upon failure to parse those strings to datetime objects, do not contrinue.
+            print '-> Invalid arguments [Err:2]: Please enter 2 date and times for two seperate events!'
+            return
+
+        mdelta = timedelta(seconds=3) # max delta to compare with
+
+        foundev1 = False
+        ev1 = None # the event corresponds to the first datetime obj
+        ev2 = None # the event corresponds to the second datetime obj
+        events_strings = self.monitor.loggerStatus.inputFromFile() # read file lines into list
+        for ev_str in events_strings: # for each line in the list
+            ev_date = ev_str[1:27] # get the datetime as a string.
+            try:
+                dd = try_parsing_date(ev_date) # parse it and store is a 'dd' variable.
+            except:
+                pass
+
+
+            if not foundev1 and ev_date == (date1) or abs(dd-d1)<mdelta:
+                ev1 = Event_Log.fromString(ev_str) #conv.decode(ev_str) - legacy
+                print ev1
+                foundev1 = True
+
+            if foundev1:
+                if not abs(dd-d2)<mdelta:
+                    ev2 = Event_Log.fromString(ev_str)
+                    print ev2
+                else:
+                    try:
+                        ev2 = Event_Log.fromString(ev_str)
+                        print ev2
+                    except:
+                        pass
+                    return
+
+ 
+    
     ## CLI-Command function 'interval', used to show current interval configuration and 
     ## modify it.
     def do_interval(self, arg):

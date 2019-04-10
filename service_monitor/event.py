@@ -125,19 +125,22 @@ class Event_Log(Event, object):
                 newservindex_e     = processNamesString.index(']')
                 newProcNamesString = processNamesString[newservindex_s+1:newservindex_e-1]
                 newProcNamesList   = newProcNamesString.split(', ')
-                newProcNamesList   = newProcNamesList[0:len(newProcNamesList)-1]
+                newProcNamesList   = newProcNamesList[0:len(newProcNamesList)]
             except:
-                pass
+                print 'error 1'
 
             stopProcNamesList = []
             try:
+                processNamesString  = processNamesString[len(newProcNamesList):len(processNamesString)]
                 stopservindex_s     = processNamesString.rindex('[')
                 stopservindex_e     = processNamesString.rindex(']')
                 stopProcNamesString = processNamesString[stopservindex_s+1:stopservindex_e-1]
                 stopProcNamesList   = stopProcNamesString.split(', ')
-                stopProcNamesList   = stopProcNamesList[0:len(stopProcNamesList)-1]
+                stopProcNamesList   = stopProcNamesList[0:len(stopProcNamesList)]
             except:
-                pass
+                print 'error 2'
+
+
 
             ev = cls('','',newProcNamesList,stopProcNamesList) #Event('','',processNamesList)
             ev.setTime(timeobj)
